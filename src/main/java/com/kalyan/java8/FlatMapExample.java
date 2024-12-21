@@ -37,6 +37,14 @@ public class FlatMapExample {
 				.collect(Collectors.toSet());
 		System.out.println(flatteredSetValues);
 
+		List<String> sentences = Arrays.asList("Hello World", "Java 8 flatMap", "Stream API");
+
+		// Using flatMap to split sentences into words
+		List<String> words = sentences.stream().flatMap(sentence -> Arrays.stream(sentence.split(" ")))
+				.collect(Collectors.toList());
+
+		System.out.println(words); // Output: [Hello, World, Java, 8, flatMap, Stream, API]
+
 	}
 
 }
