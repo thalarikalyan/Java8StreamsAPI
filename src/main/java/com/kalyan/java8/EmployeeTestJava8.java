@@ -188,8 +188,13 @@ public class EmployeeTestJava8 {
 		// 19. Find the employee with the lowest name and Given Only Employee Name
 
 		System.out.println("Find the employee with the lowest name and Given Complete Employee Details ::: ");
-		listOfEmployees.stream().min(Comparator.comparing(e -> e.getEmpname().length()))
-				.ifPresent(System.out::println);
+		listOfEmployees.stream().min(Comparator.comparing(e -> e.getEmpname().length())).ifPresent(System.out::println);
+
+		System.out.println("=========================================");
+
+		// 20. Find Employees Who Are Not Java Developers
+		System.out.println("Find Employees Who Are Not Java Developers");
+		listOfEmployees.stream().filter(e -> !e.getDesignation().equals("Java Developer")).forEach(System.out::println);
 
 		System.out.println("=========================================");
 	}
