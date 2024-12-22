@@ -46,7 +46,17 @@ public class EmployeeTestJava8 {
 				new Employee(12347, "Vedhansh", ".Net Developer", 65000, "Hyderabad"),
 				new Employee(12346, "Venkatesh", ".Net Developer", 85000, "Warangal"),
 				new Employee(12348, "Amadaiah", "Java Developer", 95000, "Hyderabad"),
-				new Employee(12349, "Madhu", "Java Developer", 17000, "Warangal")
+				new Employee(12349, "Madhu", "Java Developer", 17000, "Warangal"),
+				new Employee(12350, "Sanjay", "Python Developer", 78000, "Bangalore"),
+				new Employee(12351, "Rajesh", "Data Analyst", 82000, "Chennai"),
+				new Employee(12352, "Bhavana", "Project Manager", 120000, "Hyderabad"),
+				new Employee(12353, "Sneha", "Frontend Developer", 68000, "Pune"),
+				new Employee(12354, "Suresh", "QA Engineer", 55000, "Mumbai"),
+				new Employee(12355, "Ravi", "DevOps Engineer", 90000, "Bangalore"),
+				new Employee(12356, "Priya", "Business Analyst", 72000, "Chennai"),
+				new Employee(12357, "Divya", "HR Manager", 95000, "Hyderabad"),
+				new Employee(12358, "Vikram", "System Administrator", 60000, "Warangal"),
+				new Employee(12359, "Anjali", "Scrum Master", 105000, "Bangalore")
 
 		);
 
@@ -197,6 +207,125 @@ public class EmployeeTestJava8 {
 		listOfEmployees.stream().filter(e -> !e.getDesignation().equals("Java Developer")).forEach(System.out::println);
 
 		System.out.println("=========================================");
-	}
 
+		// 21. Find employees whose names start with a specific letter (e.g., "V")
+
+		System.out.println("Find employees whose names start with a specific letter (e.g., \"V\")");
+		List<Employee> listOfEmployeesWhoNameStartsWithV = listOfEmployees.stream()
+				.filter(e -> e.getEmpname().startsWith("V")).collect(Collectors.toList());
+		System.out.println(listOfEmployeesWhoNameStartsWithV);
+
+		System.out.println("=========================================");
+
+		// 22.Get the third highest-earning employee.
+		System.out.println("Get the third highest-earning employee. :: ");
+		Employee employee = listOfEmployees.stream().sorted(Comparator.comparing(Employee::getEmpsalary).reversed())
+				.skip(2).limit(1).findAny().get();
+		System.out.println(employee);
+
+		System.out.println("=========================================");
+
+		// 23. Find the top 3 designations with the most employees.
+
+		System.out.println("Find the top 3 designations with the most employees :: ");
+		List<Entry<String, Long>> top3EmployeesWithDesignation = listOfEmployees.stream()
+				.collect(Collectors.groupingBy(Employee::getDesignation, Collectors.counting())).entrySet().stream()
+				.sorted(Map.Entry.<String, Long>comparingByValue().reversed()).limit(3).collect(Collectors.toList());
+		System.out.println(top3EmployeesWithDesignation);
+		System.out.println("==========================================");
+
+		// 24. Partition employees based on whether their names have more than 6
+		// characters
+		System.out.println("Partition employees based on whether their names have more than 6 characters");
+
+		List<String> listOfEmployeesWithSixCharacters = listOfEmployees.stream()
+				.filter(e -> e.getEmpname().length() > 6).map(Employee::getEmpname).collect(Collectors.toList());
+		System.out.println(listOfEmployeesWithSixCharacters);
+
+		System.out.println("==========================================");
+
+		// 25. Group employees by their designation and find the average salary for each
+		// group.
+		System.out.println("Group employees by their designation and find the average salary for each group");
+		List<Entry<String, Double>> EmployeeWithAvgSalaries = listOfEmployees.stream()
+				.collect(Collectors.groupingBy(Employee::getDesignation,
+						Collectors.averagingInt(Employee::getEmpsalary)))
+				.entrySet().stream().collect(Collectors.toList());
+		System.out.println(EmployeeWithAvgSalaries);
+		System.out.println("============================================");
+
+		// 26. Find the total number of employees grouped by their city and sorted by
+		// count in descending order.
+
+		System.out.println(
+				"Find the total number of employees grouped by their city and sorted by count in descending order.");
+		Stream<Entry<String, Long>> mapOfEmployees = listOfEmployees.stream()
+				.collect(Collectors.groupingBy(Employee::getEmpaddress, Collectors.counting())).entrySet().stream()
+				.sorted(Map.Entry.<String, Long>comparingByValue());
+		mapOfEmployees.forEach(entry -> System.out.println("City is::" + entry.getKey() + " " + entry.getValue()));
+		System.out.println("============================================");
+
+		// 27. Get the names of employees sorted by their salaries in ascending order
+		// but exclude the lowest salary
+
+		System.out.println(
+				"Get the names of employees sorted by their salaries in ascending order but exclude the lowest salary ::");
+		List<Employee> listOfEmployeesBasedOnSalary = listOfEmployees.stream()
+				.sorted(Comparator.comparingInt(Employee::getEmpsalary)).skip(1).collect(Collectors.toList());
+		System.out.println(listOfEmployeesBasedOnSalary);
+		System.out.println("=================================================");
+
+		// 28 .Filter out employees whose IDs are even and return their names.
+
+		System.out.println("Filter out employees whose IDs are even and return their names.");
+
+		List<Entry<Integer, List<Employee>>> listOfEmployeesWithEvenEmpId = listOfEmployees.stream()
+				.collect(Collectors.groupingBy(Employee::getEmpid)).entrySet().stream().filter(e -> e.getKey() % 2 == 0)
+				.collect(Collectors.toList());
+		System.out.println(listOfEmployeesWithEvenEmpId);
+		System.out.println("=================================================");
+
+		// 29.Find all employees who are earning exactly the average salary.
+		System.out.println("Find all employees who are earning Greater  the average salary.");
+		Integer averageSalary = listOfEmployees.stream().collect(Collectors.averagingInt(Employee::getEmpsalary))
+				.intValue();
+		List<Employee> employeesWhoseSalaryGreaterThanAverage = listOfEmployees.stream()
+				.filter(e -> e.getEmpsalary() >= averageSalary).collect(Collectors.toList());
+		System.out.println(employeesWhoseSalaryGreaterThanAverage);
+		System.out.println("=================================================");
+
+		// 30. Get a list of employees grouped by city, sorted by salary within each
+		// group.
+//		System.out.println("Get a list of employees grouped by city, sorted by salary within each group::");
+//		listOfEmployees.stream().collect(Collectors.groupingBy(Employee::getEmpaddress),Collectors.collectingAndThen(Collectors.toList(), list->list.stream().sorted(Comparator.comparing(Employee::getEmpsalary).reversed())));
+
+		// 31. Create a flat list of all employee names converted to Uppercase
+		System.out.println("Create a flat list of all employee names converted to uppercase");
+		List<String> allEmployeesWithUpperCase = listOfEmployees.stream().map(emp -> emp.getEmpname().toUpperCase())
+				.collect(Collectors.toList());
+		System.out.println(allEmployeesWithUpperCase);
+
+		System.out.println("==================================================");
+
+		// Get the maximum salary of employees in each city
+		System.out.println("Get the maximum salary of employees in each city ::: ");
+		Map<String, Optional<Employee>> collectMaxSalary = listOfEmployees.stream().collect(Collectors
+				.groupingBy(Employee::getEmpaddress, Collectors.maxBy(Comparator.comparing(Employee::getEmpsalary))));
+		for (Map.Entry<String, Optional<Employee>> entry : collectMaxSalary.entrySet()) {
+			System.out.println(entry.getKey() + "::: " + entry.getValue().get());
+
+		}
+		System.out.println("==================================================");
+
+		// Get the Minimum salary of employees in each city
+		System.out.println("Get the Minimum salary of employees in each city ::: ");
+		Map<String, Optional<Employee>> collectMinSalary = listOfEmployees.stream().collect(Collectors
+				.groupingBy(Employee::getEmpaddress, Collectors.minBy(Comparator.comparing(Employee::getEmpsalary))));
+		for (Map.Entry<String, Optional<Employee>> entry : collectMinSalary.entrySet()) {
+			System.out.println(entry.getKey() + "::: " + entry.getValue().get());
+
+		}
+		System.out.println("==================================================");
+
+	}
 }
