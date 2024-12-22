@@ -44,6 +44,8 @@ public class FlatMapExample {
 				.collect(Collectors.toList());
 
 		System.out.println(words); // Output: [Hello, World, Java, 8, flatMap, Stream, API]
+		
+		//flatMap is used in fetching the data from the which is having 1-Many relationships (Like Nested Mapping)  
 
 	}
 

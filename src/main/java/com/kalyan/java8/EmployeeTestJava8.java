@@ -67,9 +67,9 @@ public class EmployeeTestJava8 {
 		// 2. Print the employee who is having the highest salary
 		System.out.println(":: Employee With Highest Salary:: ");
 
-		Employee highestSalaryEmployee = listOfEmployees.stream().max(Comparator.comparingInt(Employee::getEmpsalary))
-				.get();
-		System.out.println(highestSalaryEmployee);
+		Optional<Employee> max = listOfEmployees.stream().max(Comparator.comparingInt(Employee::getEmpsalary));
+
+		System.out.println(max.isPresent() ? max.get() : null);
 		System.out.println("====================================");
 		// 3. Print the employee who is having minimum salary
 		System.out.println(":: Print the employee who is having minimum salary ::  ");
