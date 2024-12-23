@@ -2,6 +2,7 @@ package com.kalyan.java8;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -309,23 +310,29 @@ public class EmployeeTestJava8 {
 
 		// Get the maximum salary of employees in each city
 		System.out.println("Get the maximum salary of employees in each city ::: ");
-		Map<String, Optional<Employee>> collectMaxSalary = listOfEmployees.stream().collect(Collectors
-				.groupingBy(Employee::getEmpaddress, Collectors.maxBy(Comparator.comparing(Employee::getEmpsalary))));
-		for (Map.Entry<String, Optional<Employee>> entry : collectMaxSalary.entrySet()) {
-			System.out.println(entry.getKey() + "::: " + entry.getValue().get());
-
-		}
+		listOfEmployees.stream()
+				.collect(Collectors.groupingBy(Employee::getEmpaddress,
+						Collectors.maxBy(Comparator.comparing(Employee::getEmpsalary))))
+				.entrySet().forEach(e -> System.out.println(e.getKey() + "++++++++++++++" + e.getValue()));
 		System.out.println("==================================================");
 
 		// Get the Minimum salary of employees in each city
 		System.out.println("Get the Minimum salary of employees in each city ::: ");
-		Map<String, Optional<Employee>> collectMinSalary = listOfEmployees.stream().collect(Collectors
-				.groupingBy(Employee::getEmpaddress, Collectors.minBy(Comparator.comparing(Employee::getEmpsalary))));
-		for (Map.Entry<String, Optional<Employee>> entry : collectMinSalary.entrySet()) {
-			System.out.println(entry.getKey() + "::: " + entry.getValue().get());
-
-		}
+		listOfEmployees.stream()
+				.collect(Collectors.groupingBy(Employee::getEmpaddress,
+						Collectors.minBy(Comparator.comparing(Employee::getEmpsalary))))
+				.entrySet().forEach(e -> System.out.println(e.getKey() + "==============" + e.getValue()));
 		System.out.println("==================================================");
 
+		// Requirement is Groups Employees based on the Address, and Print Only Employee
+		// Names
+
+		System.out.println("Groups Employees based on the Address, and Print Only Employee Names");
+
+		// Collectors.mapping()--> it is used to get specific record, value from the Map
+		Map<String, List<String>> groupEmployeesBasedOnAddress = listOfEmployees.stream().collect(Collectors
+				.groupingBy(Employee::getEmpaddress, Collectors.mapping(Employee::getEmpname, Collectors.toList())));
+
+		System.out.println(groupEmployeesBasedOnAddress);
 	}
 }
