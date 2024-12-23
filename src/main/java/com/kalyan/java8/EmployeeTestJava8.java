@@ -345,5 +345,15 @@ public class EmployeeTestJava8 {
 				.entrySet()
 				.forEach(e -> System.out.println(e.getKey() + "++++++++++++++" + e.getValue().get().getEmpname()));
 		System.out.println("==================================================");
+
+		// Find the total salary expenditure for each city.
+
+		System.out.println("Total Salary Expenditure by Each City :::");
+		listOfEmployees.stream()
+				.collect(
+						Collectors.groupingBy(Employee::getEmpaddress, Collectors.averagingInt(Employee::getEmpsalary)))
+				.entrySet().forEach(e -> System.out.println(e.getKey() + ":::: " + e.getValue().intValue()));
+
+		System.out.println("==================================================");
 	}
 }
