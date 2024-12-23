@@ -14,29 +14,6 @@ import java.util.stream.Stream;
 
 public class EmployeeTestJava8 {
 
-//	Here’s a list of questions for the Stream API using the provided Employee collection:
-//
-//		Find all employees who are Java Developers.
-//		Retrieve the names of all employees.
-//		Get the total salary of all employees.
-//		Count the number of employees in Hyderabad.
-//		Check if all employees earn more than 60,000.
-//		Find the employee with the lowest salary.
-//		Group employees by their city.
-//		Partition employees into two groups: those earning more than 75,000 and those earning less.
-//		Get the names of employees sorted by their salary in descending order.
-//		Find distinct designations of employees.
-//		Find the average salary of all employees.
-//		Get the top 2 highest-earning employees.
-//		Join all employee names into a single comma-separated string.
-//		Calculate the total salary of employees grouped by their designation.
-//		Find the second-highest salary among employees.
-//		Check if any employee is from Warangal.
-//		Find the total number of employees for each designation.
-//		List the employees in ascending order of their names.
-//		Find the employee with the maximum ID.
-//		Create a map of employee IDs and their names.
-
 	public static void main(String[] args) {
 
 		// create the employee objects
