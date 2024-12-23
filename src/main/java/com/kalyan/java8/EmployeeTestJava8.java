@@ -355,5 +355,22 @@ public class EmployeeTestJava8 {
 				.entrySet().forEach(e -> System.out.println(e.getKey() + ":::: " + e.getValue().intValue()));
 
 		System.out.println("==================================================");
+
+		System.out.println("*******Examples on Collectors.mapping.()**********************");
+		System.out.println("Convert the list of employees to a list of their names using Collectors.mapping:::");
+
+		System.out.println(":::Using only map:::");
+		List<String> collect = listOfEmployees.stream().map(Employee::getEmpname).collect(Collectors.toList());
+		System.out.println("Using Collections.mapping()");
+		List<String> collect2 = listOfEmployees.stream()
+				.collect(Collectors.mapping(Employee::getEmpname, Collectors.toList()));
+		System.out.println(collect + " " + collect2);
+		System.out.println("======================================================");
+		System.out.println("Task: Collect all employee names into a single comma-separated string.");
+		String commaSeperatedEmployeeNames = listOfEmployees.stream()
+				.collect(Collectors.mapping(Employee::getEmpname, Collectors.joining(",")));
+		System.out.println(commaSeperatedEmployeeNames);
+		System.out.println("===========================================================");
+
 	}
 }
