@@ -334,5 +334,16 @@ public class EmployeeTestJava8 {
 				.groupingBy(Employee::getEmpaddress, Collectors.mapping(Employee::getEmpname, Collectors.toList())));
 
 		System.out.println(groupEmployeesBasedOnAddress);
+
+		System.out.println("==================================================");
+
+		// Get the maximum salary of employee Names in each city
+		System.out.println("Get the maximum salary of  Only employees in each city ::: ");
+		listOfEmployees.stream()
+				.collect(Collectors.groupingBy(Employee::getEmpaddress,
+						Collectors.maxBy(Comparator.comparing(Employee::getEmpsalary))))
+				.entrySet()
+				.forEach(e -> System.out.println(e.getKey() + "++++++++++++++" + e.getValue().get().getEmpname()));
+		System.out.println("==================================================");
 	}
 }
