@@ -20,8 +20,8 @@ public class EmployeeTestJava8 {
 
 		List<Employee> listOfEmployees = Arrays.asList(
 
-				new Employee(12345, "Kalyan", "Java Developer", 75000, "Hyderabad"),
-				new Employee(12347, "Vedhansh", ".Net Developer", 65000, "Hyderabad"),
+				new Employee(12345, "Thalari Kalyan", "Java Developer", 75000, "Hyderabad"),
+				new Employee(12347, "Thalari Vedhansh", ".Net Developer", 65000, "Hyderabad"),
 				new Employee(12346, "Venkatesh", ".Net Developer", 85000, "Warangal"),
 				new Employee(12348, "Amadaiah", "Java Developer", 95000, "Hyderabad"),
 				new Employee(12349, "Madhu", "Java Developer", 17000, "Warangal"),
@@ -363,6 +363,24 @@ public class EmployeeTestJava8 {
 		Map<String, Long> citiesWithEmpCount = listOfEmployees.stream()
 				.collect(Collectors.groupingBy(Employee::getEmpaddress, Collectors.counting()));
 		System.out.println(citiesWithEmpCount);
+
+		System.out.println("===========================================================");
+
+		System.out.println("Employee With short Name ::");
+
+		String employeeWithShortname = listOfEmployees.stream()
+				.min(Comparator.comparingInt(emp -> emp.getEmpname().length())).map(Employee::getEmpname).get();
+		System.out.println(employeeWithShortname);
+
+		System.out.println("===========================================================");
+
+		System.out.println("Find employees whose name contains more than one word and print their names.");
+		List<String> listOfEmpContainsSpace = listOfEmployees.stream().filter(e -> e.getEmpname().contains(" "))
+				.map(Employee::getEmpname).collect(Collectors.toList());
+		System.out.println(listOfEmpContainsSpace);
+		System.out.println("========================================================");
+		
+		
 
 	}
 }
