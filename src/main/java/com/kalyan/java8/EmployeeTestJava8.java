@@ -349,5 +349,20 @@ public class EmployeeTestJava8 {
 		System.out.println(commaSeperatedEmployeeNames);
 		System.out.println("===========================================================");
 
+		System.out.println("Find the difference in salary between the highest-paid and the lowest-paid employee :::");
+
+		Integer maxSalary = listOfEmployees.stream()
+				.collect(Collectors.maxBy(Comparator.comparing(Employee::getEmpsalary))).map(Employee::getEmpsalary)
+				.get();
+		Integer minSalary = listOfEmployees.stream()
+				.collect(Collectors.minBy(Comparator.comparing(Employee::getEmpsalary))).map(Employee::getEmpsalary)
+				.get();
+		System.out.println("Difference between Max and Min Salary is ::" + (maxSalary - minSalary));
+		System.out.println("===============================================================");
+		System.out.println("Employee count for each designation in each city::");
+		Map<String, Long> citiesWithEmpCount = listOfEmployees.stream()
+				.collect(Collectors.groupingBy(Employee::getEmpaddress, Collectors.counting()));
+		System.out.println(citiesWithEmpCount);
+
 	}
 }
