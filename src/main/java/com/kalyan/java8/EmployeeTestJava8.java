@@ -379,8 +379,6 @@ public class EmployeeTestJava8 {
 				.map(Employee::getEmpname).collect(Collectors.toList());
 		System.out.println(listOfEmpContainsSpace);
 		System.out.println("========================================================");
-		
-		
 
 	}
 }
