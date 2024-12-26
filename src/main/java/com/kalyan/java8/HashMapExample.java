@@ -50,6 +50,34 @@ public class HashMapExample {
 				.collect(Collectors.toList());
 		System.out.println(collect.get(0));
 
+		System.out.println("Check Anagrams Using the HashMap");
+
+		String str1 = "lksten";
+		String str2 = "sllent";
+		// create the HashMap
+		if (str1.length() != str2.length()) {
+			System.out.println("Strings are NOT In Anagaram::");
+			return;
+		}
+		Map<Character, Integer> anagramHashMap = new HashMap<>();
+		for (int i = 0; i < str1.length(); i++) {
+			anagramHashMap.put(str1.charAt(i), anagramHashMap.getOrDefault(str1.charAt(i), 0) + 1);
+		}
+		for(int i=0;i<str2.length();i++) {
+			char ch2=str2.charAt(i);
+			if(!anagramHashMap.containsKey(ch2)) {
+				System.out.println("String are NOT IN anagaram");
+				return;
+			}
+			anagramHashMap.put(ch2, anagramHashMap.get(ch2)-1);
+			
+			 if (anagramHashMap.get(ch2) < 0) {
+				 System.out.println("String are NOT IN anagaram");
+					return;
+	            }
+		}
+		System.out.println("Strings are in ANAGARAM");
+
 	}
 
 }
