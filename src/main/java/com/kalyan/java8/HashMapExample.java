@@ -2,6 +2,7 @@ package com.kalyan.java8;
 
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -129,6 +130,50 @@ public class HashMapExample {
 				System.out.print(nums2[i] + " ");
 			}
 		}
+
+		System.out.println(":: Sum of Unique Elements ::");
+		Integer[] uniqueElements = { 1, 2, 2, 3, 3, 3, 4, 4, 5, 6 };
+		List<Integer> uniqueListElements = Arrays.asList(uniqueElements);
+		int sumOfUniqueElements = uniqueListElements.stream()
+				.collect(Collectors.groupingBy(e -> e, Collectors.counting())).entrySet().stream()
+				.filter(e -> e.getValue() == 1).mapToInt(e -> e.getKey()).sum();
+		System.out.println(sumOfUniqueElements);
+
+		System.out.println("::  Find Common Characters in Two Strings ::");
+		String s1 = "abc";
+		String s2 = "bcd";
+
+//		Map<Character, Integer> commonHashMap = new HashMap<>();
+//		for (int i = 0; i < s1.length(); i++) {
+//			char ch = s1.charAt(i);
+//			commonHashMap.put(ch, commonHashMap.getOrDefault(ch, 0) + 1);
+//
+//		}
+//		for (int i = 0; i < s2.length(); i++) {
+//			char ch1 = s2.charAt(i);
+//			if (commonHashMap.containsKey(ch1)) {
+//				System.out.print(ch1 + " ");
+//			}
+//		}
+		List<Character> collect3 = s1.chars().mapToObj(c -> (char) c).filter(c -> s2.indexOf(c) != -1)
+				.collect(Collectors.toList());
+		System.out.println(collect3);
+		System.out.println("Find Duplicate Elements ::: ");
+		Integer[] nums = { 4, 3, 2, 7, 8, 2, 3, 1 };
+		List<Integer> duplicateElements = Arrays.asList(nums);
+		Set<Integer> duplicateSet = duplicateElements.stream()
+				.collect(Collectors.groupingBy(e -> e, Collectors.counting())).entrySet().stream()
+				.filter(e -> e.getValue() != 1).map(e -> e.getKey()).collect(Collectors.toSet());
+		System.out.println(duplicateSet);
+
+		System.out.println("Count the frequency of each word in a sentence.");
+
+		String listWords = "this is a test this is only a test";
+		String[] listWordsArray = listWords.split(" ");
+		List<String> asList = Arrays.asList(listWordsArray);
+		Map<String, Long> countOfFrequencyWord = asList.stream()
+				.collect(Collectors.groupingBy(word -> word, LinkedHashMap::new, Collectors.counting()));
+		System.out.println(countOfFrequencyWord);
 
 	}
 
