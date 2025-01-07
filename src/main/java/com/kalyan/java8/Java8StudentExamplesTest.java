@@ -77,6 +77,13 @@ public class Java8StudentExamplesTest {
 				.findFirst().get();
 		System.out.println(studentWithSecondRank);
 
+		System.out.println("Group Students based on group and get only Students Name ::");
+		studentList.stream()
+				.collect(Collectors.groupingBy(Student::getDept,
+						Collectors.mapping(Student::getFirstName, Collectors.toList())))
+				.entrySet().stream().forEach(
+						entry -> System.out.println("Student Group is::" + entry.getKey() + "::: " + entry.getValue()));
+
 	}
 
 }
