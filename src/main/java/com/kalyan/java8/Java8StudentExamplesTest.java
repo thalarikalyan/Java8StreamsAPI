@@ -83,6 +83,9 @@ public class Java8StudentExamplesTest {
 						Collectors.mapping(Student::getFirstName, Collectors.toList())))
 				.entrySet().stream().forEach(
 						entry -> System.out.println("Student Group is::" + entry.getKey() + "::: " + entry.getValue()));
+		
+		int[] a = { 5, 1, 4, 2, 3 };
+		Arrays.sort(a);
 
 	}
 

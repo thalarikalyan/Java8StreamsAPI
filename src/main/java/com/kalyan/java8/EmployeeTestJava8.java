@@ -19,23 +19,22 @@ public class EmployeeTestJava8 {
 		// create the employee objects
 
 		List<Employee> listOfEmployees = Arrays.asList(
-				
 
-				new Employee(12345, "Thalari Kalyan", "Java Developer", 75000, "Hyderabad"),
-				new Employee(12347, "Thalari Vedhansh", ".Net Developer", 65000, "Hyderabad"),
-				new Employee(12346, "Venkatesh", ".Net Developer", 85000, "Warangal"),
-				new Employee(12348, "Amadaiah", "Java Developer", 95000, "Hyderabad"),
-				new Employee(12349, "Madhu", "Java Developer", 17000, "Warangal"),
-				new Employee(12350, "Sanjay", "Python Developer", 78000, "Bangalore"),
-				new Employee(12351, "Rajesh", "Data Analyst", 82000, "Chennai"),
-				new Employee(12352, "Bhavana", "Project Manager", 120000, "Hyderabad"),
-				new Employee(12353, "Sneha", "Frontend Developer", 68000, "Pune"),
-				new Employee(12354, "Suresh", "QA Engineer", 55000, "Mumbai"),
-				new Employee(12355, "Ravi", "DevOps Engineer", 90000, "Bangalore"),
-				new Employee(12356, "Priya", "Business Analyst", 72000, "Chennai"),
-				new Employee(12357, "Divya", "HR Manager", 95000, "Hyderabad"),
-				new Employee(12358, "Vikram", "System Administrator", 60000, "Warangal"),
-				new Employee(12359, "Anjali", "Scrum Master", 105000, "Bangalore")
+				new Employee(12345, "Thalari Kalyan", "Java Developer", 75000, "Hyderabad", 30),
+				new Employee(12347, "Thalari Vedhansh", ".Net Developer", 65000, "Hyderabad", 25),
+				new Employee(12346, "Venkatesh", ".Net Developer", 85000, "Warangal", 32),
+				new Employee(12348, "Amadaiah", "Java Developer", 95000, "Hyderabad", 55),
+				new Employee(12349, "Madhu", "Java Developer", 17000, "Warangal", 60),
+				new Employee(12350, "Sanjay", "Python Developer", 78000, "Bangalore", 65),
+				new Employee(12351, "Rajesh", "Data Analyst", 82000, "Chennai", 70),
+				new Employee(12352, "Bhavana", "Project Manager", 120000, "Hyderabad", 66),
+				new Employee(12353, "Sneha", "Frontend Developer", 68000, "Pune", 26),
+				new Employee(12354, "Suresh", "QA Engineer", 55000, "Mumbai", 33),
+				new Employee(12355, "Ravi", "DevOps Engineer", 90000, "Bangalore", 37),
+				new Employee(12356, "Priya", "Business Analyst", 72000, "Chennai", 29),
+				new Employee(12357, "Divya", "HR Manager", 95000, "Hyderabad", 38),
+				new Employee(12358, "Vikram", "System Administrator", 60000, "Warangal", 36),
+				new Employee(12359, "Anjali", "Scrum Master", 105000, "Bangalore", 47)
 
 		);
 
@@ -379,6 +378,38 @@ public class EmployeeTestJava8 {
 		List<String> listOfEmpContainsSpace = listOfEmployees.stream().filter(e -> e.getEmpname().contains(" "))
 				.map(Employee::getEmpname).collect(Collectors.toList());
 		System.out.println(listOfEmpContainsSpace);
+		System.out.println("========================================================");
+
+		System.out.println("Total Salary Expenditure by Company :::");
+		int totalSalaryExpenditure = listOfEmployees.stream().mapToInt(e -> e.getEmpsalary()).sum();
+		System.out.println(totalSalaryExpenditure);
+
+		System.out.println("========================================================");
+
+//		System.out.println(
+//				"Group employees by department and create a report showing the Designation, the number of employees, and the average salary.");
+//
+//		// Group employees by department and create a report showing the Designation,
+//		// the number of employees, and the average salary.
+//
+//		listOfEmployees.stream().collect(Collectors.groupingBy(Employee::getDesignation, Collectors.counting()));
+//		
+//		--I need to work on this logic Part
+		System.out.println(":: Calculate the Average Salary Of the All the  Employees ::");
+		int averageSalaryOfTheEmployee = listOfEmployees.stream()
+				.collect(Collectors.averagingInt(Employee::getEmpsalary)).intValue();
+		System.out.println(averageSalaryOfTheEmployee);
+
+		System.out.println("========================================================");
+
+//		Use max() when you want to directly retrieve the maximum element from a stream.
+//		Use maxBy() when you want to create a comparator for comparing elements, especially in the context of collectors or other stream operations.
+		System.out.println(
+				"List of employees (name, age, department), find the average age of employees in each Designation");
+		Map<String, Double> averageAgeInEachDept = listOfEmployees.stream()
+				.collect(Collectors.groupingBy(e -> e.getDesignation(), Collectors.averagingInt(Employee::getAge)));
+		System.out.println(averageAgeInEachDept);
+
 		System.out.println("========================================================");
 
 	}
