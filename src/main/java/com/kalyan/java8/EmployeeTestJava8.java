@@ -411,6 +411,24 @@ public class EmployeeTestJava8 {
 		System.out.println(averageAgeInEachDept);
 
 		System.out.println("========================================================");
+		System.out.println("Max Aged Employee :: ");
+		Employee maxAgedEmployee = listOfEmployees.stream().max(Comparator.comparing(Employee::getAge)).get();
+		System.out.println(maxAgedEmployee);
+		System.out.println("========================================================");
+		System.out.println("Find the sum of salaries of all employees in Hyderabad");
+		int sumOfSalariesOfEmpInHyderabad = listOfEmployees.stream().filter(e -> e.getEmpaddress().equals("Hyderabad"))
+				.mapToInt(Employee::getEmpsalary).sum();
+		System.out.println(sumOfSalariesOfEmpInHyderabad);
+		System.out.println("========================================================");
+
+		System.out.println(
+				"Calculate the total number of employees in each city where the average age of employees is greater than 40.");
+		Map<String, Integer> totalEmpWithAvgAge = listOfEmployees.stream()
+				.collect(Collectors.groupingBy(Employee::getEmpaddress)).entrySet().stream()
+				.filter(e -> e.getValue().stream().mapToInt(Employee::getAge).average().orElse(0) > 40)
+				.collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().size()));
+		System.out.println(totalEmpWithAvgAge);
+		System.out.println("========================================================");
 
 	}
 }

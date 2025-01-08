@@ -18,11 +18,11 @@ public class FlatMapExample {
 
 		List<List<Employee>> listOfListOfEmployees = Arrays.asList(
 
-				Arrays.asList(new Employee(12345, "Kalyan", "Java Developer", 75000, "Hyderabad")),
-				Arrays.asList(new Employee(12347, "Vedhansh", ".Net Developer", 65000, "Hyderabad")),
-				Arrays.asList(new Employee(12346, "Venkatesh", ".Net Developer", 85000, "Warangal")),
-				Arrays.asList(new Employee(12348, "Amadaiah", "Java Developer", 95000, "Hyderabad")),
-				Arrays.asList(new Employee(12349, "Madhu", "Java Developer", 17000, "Warangal"))
+				Arrays.asList(new Employee(12345, "Kalyan", "Java Developer", 75000, "Hyderabad", 25)),
+				Arrays.asList(new Employee(12347, "Vedhansh", ".Net Developer", 65000, "Hyderabad", 33)),
+				Arrays.asList(new Employee(12346, "Venkatesh", ".Net Developer", 85000, "Warangal", 27)),
+				Arrays.asList(new Employee(12348, "Amadaiah", "Java Developer", 95000, "Hyderabad", 52)),
+				Arrays.asList(new Employee(12349, "Madhu", "Java Developer", 17000, "Warangal", 22))
 
 		);
 //		System.out.println(listOfListIntegers);
@@ -44,8 +44,9 @@ public class FlatMapExample {
 				.collect(Collectors.toList());
 
 		System.out.println(words); // Output: [Hello, World, Java, 8, flatMap, Stream, API]
-		
-		//flatMap is used in fetching the data from the which is having 1-Many relationships (Like Nested Mapping)  
+
+		// flatMap is used in fetching the data from the which is having 1-Many
+		// relationships (Like Nested Mapping)
 
 	}
 
