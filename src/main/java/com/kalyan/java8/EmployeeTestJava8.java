@@ -437,6 +437,12 @@ public class EmployeeTestJava8 {
 		s.chars().mapToObj(c -> (char) c)
 				.collect(Collectors.groupingBy(Function.identity(), LinkedHashMap::new, Collectors.counting()))
 				.entrySet().stream().filter(e -> e.getValue() == 1).forEach(entry -> System.out.print(entry.getKey()));
+		System.out.println("========================================================");
+		List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6);
+		Map<Boolean, List<Integer>> partitionElements = numbers.stream()
+				.collect(Collectors.partitioningBy(e -> e % 2 == 0));
+		System.out.println(partitionElements);
+		System.out.println("========================================================");
 
 	}
 }
