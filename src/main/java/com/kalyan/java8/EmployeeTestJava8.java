@@ -437,11 +437,18 @@ public class EmployeeTestJava8 {
 		s.chars().mapToObj(c -> (char) c)
 				.collect(Collectors.groupingBy(Function.identity(), LinkedHashMap::new, Collectors.counting()))
 				.entrySet().stream().filter(e -> e.getValue() == 1).forEach(entry -> System.out.print(entry.getKey()));
+		System.out.println();
 		System.out.println("========================================================");
 		List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6);
 		Map<Boolean, List<Integer>> partitionElements = numbers.stream()
 				.collect(Collectors.partitioningBy(e -> e % 2 == 0));
 		System.out.println(partitionElements);
+		System.out.println("========================================================");
+		System.out.println("FlatMap Example ::");
+
+		List<List<Integer>> listOfLists = Arrays.asList(Arrays.asList(1, 2), Arrays.asList(3, 4), Arrays.asList(5, 6));
+		List<Integer> flatMapElements = listOfLists.stream().flatMap(List::stream).collect(Collectors.toList());
+		System.out.println(flatMapElements);
 		System.out.println("========================================================");
 
 	}

@@ -24,7 +24,6 @@ public class CognizantQuestion {
 		hashmap.put("sirisha", 25000);
 		System.out.println(hashmap);
 		System.out.println("Sort the map based onn the value ::");
-
 		Map<String, Integer> mapDetails = hashmap.entrySet().stream().sorted(Comparator.comparingInt(e -> e.getValue()))
 				.collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue(), (existing, replacement) -> existing, // Merge
 																													// function
@@ -32,11 +31,12 @@ public class CognizantQuestion {
 																													// case
 																													// of
 																													// duplicate
-																													// keys
+																													// Key
 						LinkedHashMap::new));// Map supplier to maintain order));
-		
-		
+
 		System.out.println(mapDetails);
+		
+		
 
 	}
 }
