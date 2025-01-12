@@ -19,5 +19,8 @@ public class RebaseTest {
 		System.out.println("Latest Changes are done to the Feature Branch");
 		System.out.println("2025-01-12");
 		System.out.println("Confilicts Added in main Branch");
+		System.out.println("Confilicts Added in Feature Branch");
+		System.out.println("Confilicts Added in Feature Branch");
+
 	}
 }
