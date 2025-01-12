@@ -8,6 +8,8 @@ public class RebaseTest {
 		System.out.println("I am Updated the Main Branch");
     System.out.println("I am updating code in feature branch");
     System.out.println("I am updated the main branch After the Merge request is created ::");
+    System.out.println("=====================================================");
+    System.out.println("Feature branch Updated ");
 
 	}
 }
