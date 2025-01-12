@@ -12,6 +12,6 @@ public class RebaseTest {
 		System.out.println("Feature branch Updated ");
 		System.out.println("Feature branch Updated_Two");
 		System.out.println("Updated Line number 14");
-		System.out.println();
+		System.out.println("============================");
 	}
 }
