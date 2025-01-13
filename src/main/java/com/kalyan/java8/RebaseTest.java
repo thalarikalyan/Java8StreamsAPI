@@ -27,7 +27,7 @@ public class RebaseTest {
 		System.out.println("Last changes In Conflicts main branch");
 		System.out.println("Last changes In Conflicts feature branch");
 		System.out.println("Feature branch WithOUt Conflicts");
-		System.out.println("Last Step_Without Conflicts");
+		System.out.println("Last Step_Without Conflicts**");
 
 	}
 }
