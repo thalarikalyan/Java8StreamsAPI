@@ -1,7 +1,9 @@
 package com.kalyan.java8;
 
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.DoubleSummaryStatistics;
 import java.util.List;
@@ -16,8 +18,8 @@ public class OrderManagementSystem {
 		List<Order> orders = Arrays.asList(
 				new Order(1, "Laptop", "C001", 1200.50, "DELIVERED", LocalDate.of(2025, 1, 10), 2),
 				new Order(2, "Phone", "C002", 800.00, "PENDING", LocalDate.of(2025, 1, 12), 5),
-				new Order(3, "Laptop", "C003", 1150.75, "CANCELLED", LocalDate.of(2025, 1, 11), 2),
-				new Order(4, "Tablet", "C004", 500.00, "DELIVERED", LocalDate.of(2025, 1, 14), 1),
+				new Order(3, "Laptop", "C003", 1150.75, "CANCELLED", LocalDate.of(2024, 12, 11), 2),
+				new Order(4, "Tablet", "C004", 500.00, "DELIVERED", LocalDate.of(2024, 12, 14), 1),
 				new Order(5, "Laptop", "C007", 1250.00, "PENDING", LocalDate.of(2025, 1, 13), 4),
 				new Order(6, "Phone", "C005", 850.25, "DELIVERED", LocalDate.of(2025, 1, 15), 1),
 				new Order(7, "Tablet", "C008", 600.00, "DELIVERED", LocalDate.of(2025, 1, 16), 2));
@@ -123,6 +125,42 @@ public class OrderManagementSystem {
 
 			}
 		});
+		System.out.println("=====================================================================================");
+		System.out.println("Compute the average price for each product category (e.g., Laptop, Phone, Tablet)");
+		orders.stream()
+				.collect(Collectors.groupingBy(Order::getProductName, Collectors.averagingDouble(Order::getPrice)))
+				.entrySet().stream().forEach(e -> System.out.println(e.getKey() + ":::" + e.getValue()));
+		System.out.println("=====================================================================================");
+		System.out.println("Identify the order that has the highest quantity of products.");
+		Order productWithMaxQuantity = orders.stream().max(Comparator.comparing(Order::getQuantity)).get();
+		System.out.println(productWithMaxQuantity);
+		System.out.println("=====================================================================================");
+		System.out
+				.println("Group the orders by the month of the orderDate and calculate total revenue for each month.");
+		Map<Month, Double> collect2 = orders.stream().collect(
+				Collectors.groupingBy(o -> o.getOrderDate().getMonth(), Collectors.summingDouble(Order::getPrice)));
+		System.out.println(collect2);
+		System.out.println("=====================================================================================");
+		System.out.println("Calculate Total Revenue by Order Status ::");
+		Map<String, Double> totalRevenuteByStatus = orders.stream()
+				.collect(Collectors.groupingBy(o -> o.getStatus(), Collectors.summingDouble(Order::getPrice)));
+		System.out.println(totalRevenuteByStatus);
+		System.out.println("=====================================================================================");
+
+		System.out.println(
+				"Calculate the average price of all orders and filter orders with a price above this average.");
+		Double averagePrice = orders.stream().collect(Collectors.averagingDouble(o -> o.getPrice()));
+		List<Order> OrdersGreaterThanAvgPrice = orders.stream().filter(o -> o.getPrice() > averagePrice)
+				.collect(Collectors.toList());
+		System.out.println(OrdersGreaterThanAvgPrice);
+		System.out.println("=====================================================================================");
+		System.out.println("Partition Orders by Delivery Status");
+		Map<Boolean, List<Order>> ordersByParition = orders.stream()
+				.collect(Collectors.partitioningBy(o -> o.getStatus().equalsIgnoreCase("DELIVERED")));
+		System.out.println("Orders With Delivered Status ::");
+		ordersByParition.get(true).forEach(System.out::println);
+		System.out.println("Orders With Other Status ::");
+		ordersByParition.get(false).forEach(System.out::println);
 		System.out.println("=====================================================================================");
 
 	}
