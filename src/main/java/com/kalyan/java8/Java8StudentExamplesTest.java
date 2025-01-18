@@ -2,10 +2,12 @@ package com.kalyan.java8;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -83,9 +85,19 @@ public class Java8StudentExamplesTest {
 						Collectors.mapping(Student::getFirstName, Collectors.toList())))
 				.entrySet().stream().forEach(
 						entry -> System.out.println("Student Group is::" + entry.getKey() + "::: " + entry.getValue()));
-		
+
 		int[] a = { 5, 1, 4, 2, 3 };
 		Arrays.sort(a);
+
+		System.out.println("==================================");
+		String s = "Kalyan";
+		System.out.println("Unique Characters in a given String :::");
+		String uniqueCharsInString = s.chars().mapToObj(c -> (char) c)
+				.collect(Collectors.groupingBy(Function.identity(), LinkedHashMap::new, Collectors.counting()))
+				.entrySet().stream().filter(e -> e.getValue() == 1).map(e -> e.getKey()).map(String::valueOf)
+				.collect(Collectors.joining());
+		System.out.println(uniqueCharsInString);
+		
 
 	}
 
