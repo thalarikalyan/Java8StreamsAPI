@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.OptionalDouble;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
@@ -184,6 +185,13 @@ public class EcommerceApplication {
 				Collectors.summingDouble(p -> p.getProducts().stream().mapToDouble(price -> price.getPrice()).sum())));
 		System.out.println(priceOfEachOrder);
 		System.out.println("========================================");
+
+		System.out.println(
+				"6.Find the average delivery time (from order date to delivery date) for \"Delivered\" orders.");
+		OptionalDouble averageDate = orders.stream().filter(o -> o.getStatus().equals("Delivered"))
+				.mapToLong(o -> ChronoUnit.DAYS.between(o.getOrderDate(), o.getDeliveryDate())).average();
+		System.out.println(averageDate.getAsDouble());
+
 	}
 
 }
