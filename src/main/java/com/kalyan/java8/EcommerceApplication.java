@@ -179,6 +179,11 @@ public class EcommerceApplication {
 				.entrySet().stream().forEach(e -> System.out.println(e.getKey() + ":::" + e.getValue()));
 
 		System.out.println("========================================");
+		System.out.println("5. For each order, calculate the total price of products in the order.");
+		Map<Integer, Double> priceOfEachOrder = orders.stream().collect(Collectors.groupingBy(o -> o.getId(),
+				Collectors.summingDouble(p -> p.getProducts().stream().mapToDouble(price -> price.getPrice()).sum())));
+		System.out.println(priceOfEachOrder);
+		System.out.println("========================================");
 	}
 
 }
