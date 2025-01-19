@@ -192,6 +192,8 @@ public class EcommerceApplication {
 				.mapToLong(o -> ChronoUnit.DAYS.between(o.getOrderDate(), o.getDeliveryDate())).average();
 		System.out.println(averageDate.getAsDouble());
 
+		System.out.println("========================================");
+
 	}
 
 }
