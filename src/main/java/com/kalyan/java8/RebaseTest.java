@@ -29,6 +29,7 @@ public class RebaseTest {
 		System.out.println("Feature branch WithOUt Conflicts");
 		System.out.println("Last Step_Without Conflicts***");
 		System.out.println("I am updating the code in Feature Branch TO Raise the conflict");
+		System.out.println("I am updating the code in main Branch TO Raise the conflict_Updated_Version");
 
 	}
 }
