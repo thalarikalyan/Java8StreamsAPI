@@ -6,6 +6,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.DoubleSummaryStatistics;
+import java.util.IntSummaryStatistics;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -35,16 +36,17 @@ public class EcommerceApplication {
 				new Products(9, "Headphones", "Electronics", 149.99, 18, 90),
 				new Products(10, "Coffee Maker", "Home Appliances", 89.99, 7, 45));
 
-		List<Customer> customers = Arrays.asList(new Customer(1, "John Doe", "john.doe@example.com"),
-				new Customer(2, "Jane Smith", "jane.smith@example.com"),
-				new Customer(3, "Bob Johnson", "bob.johnson@example.com"),
-				new Customer(4, "Alice Brown", "alice.brown@example.com"),
-				new Customer(5, "Tom Wilson", "tom.wilson@example.com"),
-				new Customer(6, "Sara White", "sara.white@example.com"),
-				new Customer(7, "Mike Green", "mike.green@example.com"),
-				new Customer(8, "Emma Davis", "emma.davis@example.com"),
-				new Customer(9, "Chris Lee", "chris.lee@example.com"),
-				new Customer(10, "Sophia Taylor", "sophia.taylor@example.com"));
+		List<Customer> customers = Arrays.asList(new Customer(1, "John Doe", "john.doe@gmail.com"),
+				new Customer(2, "Jane Smith", "jane.smith@gmail.com"),
+				new Customer(3, "Bob Johnson", "bob.johnson@gmail.com"),
+				new Customer(4, "Alice Brown", "alice.brown@yahoo.com"),
+				new Customer(5, "Tom Wilson", "tom.wilson@gmail.com"),
+				new Customer(6, "Sara White", "sara.white@yahoo.com"),
+				new Customer(7, "Mike Green", "mike.green@gmail.com"),
+				new Customer(8, "Emma Davis", "emma.davis@yahoo.com"),
+				new Customer(9, "Chris Lee", "chris.lee@gmail.com"),
+				new Customer(10, "Sophia Taylor", "sophia.taylor@gmail.com"),
+				new Customer(11, "Ravi", "sophia.taylor@gmail.com"));
 
 		List<Orders> orders = Arrays.asList(
 				new Orders(1, customers.get(0), Arrays.asList(products.get(0), products.get(3)), "Delivered",
@@ -247,6 +249,53 @@ public class EcommerceApplication {
 				.collect(Collectors.groupingBy(p -> p.getCategory(), Collectors.summingDouble(p -> p.getStock())))
 				.entrySet().stream().max(Entry.comparingByValue()).get();
 		System.out.println(maxStock);
+		System.out.println("=========================================");
+		System.out.println("Find the oldest pending order (based on the order date).");
+
+		Orders oldestPendingOrder = orders.stream().filter(o -> o.getStatus().equals("Pending"))
+				.min(Comparator.comparing(Orders::getOrderDate)).get();
+		System.out.println(oldestPendingOrder);
+
+		System.out.println("=========================================");
+		System.out.println(
+				"Generate a report of products grouped by their categories, including the total stock quantity for each category.");
+		Map<String, IntSummaryStatistics> collect = products.stream()
+				.collect(Collectors.groupingBy(p -> p.getCategory(), Collectors.summarizingInt(p -> p.getStock())));
+		collect.entrySet().stream().forEach(e -> System.out.println(e.getKey() + ":::" + e.getValue().getSum()));
+		System.out.println("=========================================");
+		System.out.println("Find customers who haven't placed any orders yet.");
+		Set<Integer> customerIdWhoIsOrderedTheProducts = orders.stream()
+				.collect(Collectors.groupingBy(e -> e.getCustomer().getId())).entrySet().stream().map(e -> e.getKey())
+				.collect(Collectors.toSet());
+		Set<Customer> customerWhoIsNotOrderedYet = customers.stream()
+				.filter(c -> !customerIdWhoIsOrderedTheProducts.contains(c.getId())).collect(Collectors.toSet());
+		System.out.println(customerWhoIsNotOrderedYet);
+		System.out.println("=========================================");
+		System.out.println("Generate a report showing the average spending of each customer.");
+
+		Map<String, Double> customerReport = orders.stream()
+				.collect(Collectors.groupingBy(c -> c.getCustomer().getName(), Collectors
+						.averagingDouble(p -> p.getProducts().stream().mapToDouble(price -> price.getPrice()).sum())));
+		System.out.println(customerReport);
+		System.out.println("=========================================");
+		System.out.println("Identify the customers who placed more than 500$ on Each Order.");
+		Set<Integer> orderIdWithMoreThan500Purchase = orders.stream()
+				.collect(Collectors.groupingBy(order -> order.getId(),
+						Collectors.summingDouble(o -> o.getProducts().stream().mapToDouble(p -> p.getPrice()).sum())))
+				.entrySet().stream().filter(e -> e.getValue() > 500).map(e -> e.getKey()).collect(Collectors.toSet());
+		List<String> cusomterNames = orders.stream()
+				.filter(order -> orderIdWithMoreThan500Purchase.contains(order.getId()))
+				.map(c -> c.getCustomer().getName()).collect(Collectors.toList());
+		System.out.println(cusomterNames);
+		System.out.println("===========================================");
+		Long gmailCount = customers.stream().filter(c -> c.getEmail().contains("@gmail"))
+				.collect(Collectors.counting());
+		Long yahooCount = customers.stream().filter(c -> c.getEmail().contains("@yahoo"))
+				.collect(Collectors.counting());
+		System.out.println("Gmail Count is: " + gmailCount);
+		System.out.println("Yahoo Count is: " + yahooCount);
+		System.out.println("===========================================");
+		
 
 	}
 
