@@ -14,6 +14,7 @@ import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.Set;
 import java.util.function.ToLongFunction;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 import java.util.stream.LongStream;
@@ -200,10 +201,11 @@ public class EcommerceApplication {
 		System.out.println("========================================");
 
 		System.out.println("Find Top 3 Products Which are ordered Mostly:::");
-		List<Entry<String, Long>> topThreeOrderedProducts = orders.stream().flatMap(p -> p.getProducts().stream())
-				.collect(Collectors.groupingBy(product -> product.getName(), Collectors.counting())).entrySet().stream()
-				.sorted(Map.Entry.<String, Long>comparingByValue().reversed()).limit(3).collect(Collectors.toList());
-		System.out.println(topThreeOrderedProducts);
+		Map<String, Long> top3Products = orders.stream().flatMap(o -> o.getProducts().stream())
+				.collect(Collectors.groupingBy(p -> p.getName(), Collectors.counting())).entrySet().stream().limit(3)
+				.collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
+		System.out.println(top3Products);
+
 		System.out.println("=========================================");
 		System.out.println("Find all products Which are Ordered Mostly::");
 
@@ -279,14 +281,18 @@ public class EcommerceApplication {
 		System.out.println(customerReport);
 		System.out.println("=========================================");
 		System.out.println("Identify the customers who placed more than 500$ on Each Order.");
-		Set<Integer> orderIdWithMoreThan500Purchase = orders.stream()
-				.collect(Collectors.groupingBy(order -> order.getId(),
-						Collectors.summingDouble(o -> o.getProducts().stream().mapToDouble(p -> p.getPrice()).sum())))
-				.entrySet().stream().filter(e -> e.getValue() > 500).map(e -> e.getKey()).collect(Collectors.toSet());
-		List<String> cusomterNames = orders.stream()
-				.filter(order -> orderIdWithMoreThan500Purchase.contains(order.getId()))
-				.map(c -> c.getCustomer().getName()).collect(Collectors.toList());
-		System.out.println(cusomterNames);
+		Map<String, Double> customerWhoOrderAboveFiveHundered = orders.stream()
+				.collect(Collectors.groupingBy(o -> o,
+						Collectors.summingDouble(p -> p.getProducts().stream().mapToDouble(Products::getPrice).sum())))
+				.entrySet().stream().filter(e -> e.getValue() > 500)
+				.collect(Collectors.toMap(o -> o.getKey().getCustomer().getName(), v -> v.getValue()));
+		System.out.println(customerWhoOrderAboveFiveHundered);
+		Map<String, Double> customerNameAboveFiveHundered = orders.stream()
+				.filter(o -> o.getProducts().stream().mapToDouble(product -> product.getPrice()).sum() > 500)
+				.collect(Collectors.toMap(e -> e.getCustomer().getName(),
+						e -> e.getProducts().stream().mapToDouble(price -> price.getPrice()).sum()));
+		System.out.println(customerNameAboveFiveHundered);
+
 		System.out.println("===========================================");
 		Long gmailCount = customers.stream().filter(c -> c.getEmail().contains("@gmail"))
 				.collect(Collectors.counting());
@@ -295,7 +301,13 @@ public class EcommerceApplication {
 		System.out.println("Gmail Count is: " + gmailCount);
 		System.out.println("Yahoo Count is: " + yahooCount);
 		System.out.println("===========================================");
-		
+		System.out.println("Difference between map and flatMap");
+		List<Stream<Products>> collect2 = orders.stream().map(p -> p.getProducts().stream())
+				.collect(Collectors.toList());
+		System.out.println(collect2);
+		List<Products> collect3 = orders.stream().flatMap(p -> p.getProducts().stream()).collect(Collectors.toList());
+		System.out.println(collect3);
+		System.out.println("===========================================");
 
 	}
 
