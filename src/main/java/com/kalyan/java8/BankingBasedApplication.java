@@ -3,10 +3,12 @@ package com.kalyan.java8;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.DoubleSummaryStatistics;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -163,8 +165,175 @@ public class BankingBasedApplication {
 		System.out.println("========================================================================");
 
 		System.out.println("Count how many customers have more than one account.");
-		long customerCount = bankingDetails.stream().filter(v -> v.getAccounts().size() > 1).count();
+		long customerCount = bankingDetails.stream().filter(account -> account.getAccounts().size() > 1).count();
 		System.out.println(customerCount);
+		System.out.println("========================================================================");
+		System.out.println("Find all customers whose total balance in CURRENT accounts exceeds ₹20,000.");
+		List<BankingCustomer> listOfCustomersValue = bankingDetails.stream()
+				.filter(customer -> customer.getAccounts().stream().anyMatch(
+						account -> account.getAccountType().equals("CURRENT") && account.getBalance() > 20000))
+				.map(updatedCustomerDetails -> new BankingCustomer(updatedCustomerDetails.getId(),
+						updatedCustomerDetails.getName(), updatedCustomerDetails.getCity(),
+						updatedCustomerDetails.getAccounts().stream()
+								.filter(acc -> acc.getAccountType().equals("CURRENT")).collect(Collectors.toList())))
+				.collect(Collectors.toList());
+		System.out.println(listOfCustomersValue);
+		System.out.println("========================================================================");
+
+		System.out.println("Generate a list of customer names who have both SAVINGS and LOAN accounts.");
+		List<BankingCustomer> listOfCustomerWithHoldingSavigsAndLoan = bankingDetails.stream()
+				.filter(customer -> customer.getAccounts().stream()
+						.allMatch(accountype -> accountype.getAccountType().equals("SAVINGS")
+								|| accountype.getAccountType().equals("LOAN")))
+				.collect(Collectors.toList());
+		System.out.println(listOfCustomerWithHoldingSavigsAndLoan);
+		System.out.println("========================================================================");
+		System.out.println("Find the customer(s) with the least total account balance.");
+//		Optional<Entry<BankingCustomer, Double>> customerWithLeastBalance = bankingDetails.stream()
+//				.filter(customer -> customer.getAccounts().stream()
+//						.anyMatch(account -> account.getAccountType().equals("CURRENT")
+//								|| account.getAccountType().equals("SAVINGS")))
+//				.map(updatedCustomerDetails -> new BankingCustomer(updatedCustomerDetails.getId(),
+//						updatedCustomerDetails.getName(), updatedCustomerDetails.getAge(),
+//						updatedCustomerDetails.getCity(),
+//						updatedCustomerDetails.getAccounts().stream()
+//								.filter(account -> account.getAccountType().equals("CURRENT")
+//										|| account.getAccountType().equals("SAVINGS"))
+//								.collect(Collectors.toList())))
+//				.collect(Collectors.groupingBy(c -> c,
+//						Collectors.summingDouble(
+//								e -> e.getAccounts().stream().mapToDouble(balance -> balance.getBalance()).sum())))
+//				.entrySet().stream().min(Entry.<BankingCustomer, Double>comparingByValue());
+//		if (customerWithLeastBalance.isPresent())
+//			System.out.println(customerWithLeastBalance.get());
+//		System.out.println("========================================================================");
+
+		// System.out.println("Find the customer(s) with the least total account
+		// balance.");
+
+		Optional<Entry<BankingCustomer, Double>> customerWithLeastBalance = bankingDetails.stream()
+				.filter(customer -> customer.getAccounts().stream()
+						.anyMatch(account -> account.getAccountType().equals("CURRENT")
+								|| account.getAccountType().equals("SAVINGS")))
+				// Filter customers Details Who is having SAVINGS OR CURRENT in their accounts
+				// (here it will give accounts with other accounts also)
+				.collect(Collectors.toMap(customer -> customer, // Use the customer as the key
+						customer -> customer.getAccounts().stream() // Sum balances of "CURRENT" and "SAVINGS" accounts
+								.filter(account -> account.getAccountType().equals("CURRENT")
+										|| account.getAccountType().equals("SAVINGS")) // It will give only SAVINGS and
+																						// CURRENT accounts from each
+																						// customer
+								.mapToDouble(BankingAccount::getBalance).sum()))
+				.entrySet().stream() // Find the entry with the minimum balance
+				.min(Entry.comparingByValue());
+
+		if (customerWithLeastBalance.isPresent()) {
+			System.out.println("Customer with the least total account balance: ");
+			System.out.println(customerWithLeastBalance.get());
+		} else {
+			System.out.println("No customer found with savings or current accounts.");
+		}
+		System.out.println("========================================================================");
+
+		System.out.println("Retrieve all account IDs for customers living in \"Delhi.\"");
+		List<Integer> listOfBankIds = bankingDetails.stream().filter(address -> address.getCity().equals("Delhi"))
+				.flatMap(banking -> banking.getAccounts().stream()).map(customer -> customer.getAccountId())
+				.collect(Collectors.toList());
+		System.out.println(listOfBankIds);
+		System.out.println("========================================================================");
+
+		System.out.println("Create a map of account types and the count of how many accounts exist for each type.");
+		Map<String, Long> countAccountTypes = bankingDetails.stream().flatMap(banking -> banking.getAccounts().stream())
+				.collect(Collectors.groupingBy(accountType -> accountType.getAccountType(), Collectors.counting()));
+		System.out.println(countAccountTypes);
+		System.out.println("========================================================================");
+
+		System.out.println("Find customers based on cities and have at least one LOAN account.");
+		bankingDetails.stream()
+				.filter(accounts -> accounts.getAccounts().stream()
+						.anyMatch(accounType -> accounType.getAccountType().equals("LOAN")))
+				.collect(Collectors.groupingBy(BankingCustomer::getCity)).entrySet().stream()
+				.forEach(e -> System.out.println(e.getKey() + "::" + e.getValue()));
+
+		System.out.println("========================================================================");
+
+		System.out.println("Find customers based on specific city and have at least one LOAN account.");
+		bankingDetails.stream().filter(city -> city.getCity().equals("Hyderabad"))
+				.filter(accounts -> accounts.getAccounts().stream()
+						.anyMatch(accounType -> accounType.getAccountType().equals("LOAN")))
+				.collect(Collectors.groupingBy(BankingCustomer::getCity)).entrySet().stream()
+				.forEach(e -> System.out.println(e.getKey() + "::" + e.getValue()));
+
+		System.out.println("========================================================================");
+
+		System.out.println("Calculate the total number of accounts across all customers.");
+		List<BankingAccount> flatMap = bankingDetails.stream().flatMap(accounts -> accounts.getAccounts().stream())
+				.collect(Collectors.toList());
+		System.out.println(flatMap.size());
+
+		long totalNoOfAccounts = bankingDetails.stream().flatMap(accounts -> accounts.getAccounts().stream()).count();
+		System.out.println(totalNoOfAccounts);
+		System.out.println("========================================================================");
+		System.out.println("List customers whose total account balance is divisible by 10,000");
+
+		Map<BankingCustomer, Double> customersWhosBalanceDivisbleBy10000 = bankingDetails.stream()
+				.filter(customer -> customer.getAccounts().stream()
+						.anyMatch(account -> account.getAccountType().equals("CURRENT")
+								|| account.getAccountType().equals("SAVINGS")))
+				.collect(Collectors.toMap(customer -> customer, // Use the customer as the key
+						customer -> customer.getAccounts().stream() // Sum balances of "CURRENT" and "SAVINGS" accounts
+								.filter(account -> account.getAccountType().equals("CURRENT")
+										|| account.getAccountType().equals("SAVINGS")) // It will give only SAVINGS and
+																						// CURRENT accounts from each
+																						// customer
+								.mapToDouble(BankingAccount::getBalance).sum()))
+				.entrySet().stream().filter(e -> e.getValue() % 10000 == 0)
+				.collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
+		System.out.println(customersWhosBalanceDivisbleBy10000);
+		System.out.println("========================================================================");
+
+		System.out.println("Find all customers below 25 years of age and retrieve only their names.");
+		List<BankingCustomer> customersAbove25Years = bankingDetails.stream().filter(age -> age.getAge() > 25)
+				.collect(Collectors.toList());
+		System.out.println(customersAbove25Years);
+		System.out.println("========================================================================");
+		System.out.println("Create a summary of total balances grouped by account type.");
+		Map<String, Double> totalBalanceOfEachAccountType = bankingDetails.stream()
+				.flatMap(bankingAccount -> bankingAccount.getAccounts().stream())
+				.collect(Collectors.groupingBy(accountType -> accountType.getAccountType(),
+						Collectors.summingDouble(BankingAccount::getBalance)));
+		System.out.println(totalBalanceOfEachAccountType);
+		System.out.println("========================================================================");
+		System.out.println("Determine the total number of accounts across all customers in each city.");
+		Map<String, Long> totalNoOfCustomerInEachCity = bankingDetails.stream()
+				.collect(Collectors.groupingBy(c -> c.getCity(), Collectors.counting()));
+		System.out.println(totalNoOfCustomerInEachCity);
+		System.out.println("========================================================================");
+
+		System.out.println("Sort all customers alphabetically by their names and print their details.");
+		List<BankingCustomer> sortTheCusomers = bankingDetails.stream()
+				.sorted(Comparator.comparing(BankingCustomer::getName).reversed()).collect(Collectors.toList());
+		System.out.println(sortTheCusomers);
+		System.out.println("========================================================================");
+
+		System.out.println("Retrieve the top 5 customers with the highest total LOAN balances");
+		LinkedHashMap<String, Double> topFiveCustomers = bankingDetails.stream()
+				.filter(accountType -> accountType.getAccounts().stream()
+						.anyMatch(bankAccountType -> bankAccountType.getAccountType().equals("LOAN")))
+				.collect(Collectors.toMap(Function.identity(),
+						customer -> customer.getAccounts().stream().filter(
+								eachCustomerAccountType -> eachCustomerAccountType.getAccountType().equals("LOAN"))
+								.collect(Collectors.summingDouble(balance -> balance.getBalance()))))
+				.entrySet().stream().sorted(Entry.<BankingCustomer, Double>comparingByValue().reversed()).limit(5)
+				.collect(Collectors.toMap(customerName -> customerName.getKey().getName(), Entry::getValue,
+						(e1, e2) -> e1, LinkedHashMap::new));
+		System.out.println(topFiveCustomers);
+		System.out.println("========================================================================");
+		System.out.println("Merge all account IDs from all customers into a single list.");
+		List<Integer> customerIds = bankingDetails.stream()
+				.flatMap(accountDetails -> accountDetails.getAccounts().stream())
+				.map(accountId -> accountId.getAccountId()).collect(Collectors.toList());
+		System.out.println(customerIds);
 		System.out.println("========================================================================");
 
 	}
