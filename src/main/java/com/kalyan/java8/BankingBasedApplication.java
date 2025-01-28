@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
+import java.util.jar.Attributes.Name;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -36,7 +38,7 @@ public class BankingBasedApplication {
 				new BankingCustomer(7, "Grace", 32, "Mumbai",
 						Arrays.asList(new BankingAccount(112, "SAVINGS", 18000.0))),
 				new BankingCustomer(8, "Henry", 50, "Delhi",
-						Arrays.asList(new BankingAccount(113, "CURRENT", 15000.0),
+						Arrays.asList(new BankingAccount(113, "CURRENT", 75000.0),
 								new BankingAccount(114, "LOAN", 350000.0))),
 				new BankingCustomer(9, "Ivy", 28, "Kolkata",
 						Arrays.asList(new BankingAccount(115, "SAVINGS", 12000.0),
@@ -335,7 +337,80 @@ public class BankingBasedApplication {
 				.map(accountId -> accountId.getAccountId()).collect(Collectors.toList());
 		System.out.println(customerIds);
 		System.out.println("========================================================================");
+		System.out.println("Find the top 3 cities with the highest number of customers.");
+		List<Entry<String, Long>> topThreeCustomersWithCities = bankingDetails.stream()
+				.collect(Collectors.groupingBy(city -> city.getCity(), Collectors.counting())).entrySet().stream()
+				.sorted(Entry.<String, Long>comparingByValue().reversed()).limit(3).collect(Collectors.toList());
+		System.out.println(topThreeCustomersWithCities);
+		System.out.println("========================================================================");
+		System.out.println(
+				"Generate a report of customers, where each report shows the customer's name, age, city, and total balance.");
+
+		bankingDetails.stream()
+				.collect(Collectors.groupingBy(c -> c, Collectors.summarizingDouble(
+						account -> account.getAccounts().stream().mapToDouble(BankingAccount::getBalance).sum())))
+				.entrySet().stream()
+				.forEach(e -> System.out.println("Customer name ::" + e.getKey().getName() + " ," + "Customer Age :"
+						+ e.getKey().getAge() + " ," + "Customer City :" + e.getKey().getCity() + " ,"
+						+ "Total Balance Is:: " + e.getValue().getSum()));
+		System.out.println("========================================================================");
+		System.out.println("Identify all customers whose total account balance (SAVINGS + CURRENT) is an even number.");
+		Map<BankingCustomer, Double> customerWithTotalBalanceEvenNumber = bankingDetails.stream()
+				.filter(bankAccountType -> bankAccountType.getAccounts().stream()
+						.anyMatch(account -> account.getAccountType().equals("SAVINGS")
+								|| account.getAccountType().equals("CURRENT")))
+				.collect(Collectors.toMap(Function.identity(),
+						acc -> acc.getAccounts().stream()
+								.filter(accountType -> accountType.getAccountType().equals("SAVINGS")
+										|| accountType.getAccountType().equals("CURRENT"))
+								.mapToDouble(price -> price.getBalance()).sum()))
+				.entrySet().stream().filter(value -> value.getValue() % 2 == 0)
+				.collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
+		System.out.println(customerWithTotalBalanceEvenNumber);
+		System.out.println("========================================================================");
+		System.out.println("Generate a list of customers who have more than two accounts.");
+		List<Entry<BankingCustomer, Integer>> customerWithMoreThanThreeAccounts = bankingDetails.stream()
+				.collect(Collectors.toMap(customer -> customer, accounts -> accounts.getAccounts().size())).entrySet()
+				.stream().filter(e -> e.getValue() > 2).collect(Collectors.toList());
+		System.out.println(customerWithMoreThanThreeAccounts);
+		System.out.println("========================================================================");
+		System.out.println(
+				"Create a Map<String, List<String>> where the key is the city name, and the value is the list of customer names in that city.");
+		Map<String, List<String>> cityNameAndCustomerNames = bankingDetails.stream().collect(Collectors
+				.groupingBy(city -> city.getCity(), Collectors.mapping(name -> name.getName(), Collectors.toList())));
+		System.out.println(cityNameAndCustomerNames);
+		System.out.println("========================================================================");
+		System.out.println("Retrieve the account IDs of all CURRENT accounts with a balance exceeding ₹50,000.");
+		bankingDetails.stream().flatMap(account -> account.getAccounts().stream())
+				.collect(Collectors.toMap(accountId -> accountId.getAccountId(), Function.identity())).entrySet()
+				.stream()
+				.filter(accountType -> accountType.getValue().getAccountType().equals("CURRENT")
+						&& accountType.getValue().getBalance() > 50000)
+				.forEach(e -> System.out.print(e.getKey() + " "));
+		System.out.println("========================================================================");
+		System.out.println("List all cities where at least one customer has a SAVINGS account.");
+
+		Set<String> listOfCitiesWithAtlteastOneBankAccountNumber = bankingDetails.stream()
+				.filter(customer -> customer.getAccounts().stream()
+						.anyMatch(account -> account.getAccountType().equals("SAVINGS")))
+				.map(BankingCustomer::getCity).collect(Collectors.toSet());
+		System.out.println(listOfCitiesWithAtlteastOneBankAccountNumber);
+		System.out.println("========================================================================");
+		System.out.println("Find the total loan balance for all customers living in \"Chennai.\"");
+		double totalBalanceOfCustomersInChennai = bankingDetails.stream()
+				.filter(city -> city.getCity().equals("Chennai"))
+				.flatMap(accountDetails -> accountDetails.getAccounts().stream())
+				.mapToDouble(balance -> balance.getBalance()).sum();
+		System.out.println(totalBalanceOfCustomersInChennai);
+		System.out.println("========================================================================");
+		System.out.println("Identify the city with the highest total balance across all account types.");
+		bankingDetails.stream().collect(Collectors.groupingBy(city -> city.getCity(),
+				Collectors.summingDouble(account -> account.getAccounts().stream().filter(
+						type -> type.getAccountType().equals("SAVINGS") || type.getAccountType().equals("CURRENT"))
+						.mapToDouble(balance -> balance.getBalance()).sum())))
+				.entrySet().stream().max(Map.Entry.comparingByValue()).ifPresent(e -> System.out
+						.println("City is " + e.getKey() + "::: " + " Total Balance is:" + e.getValue()));
+		System.out.println("========================================================================");
 
 	}
-
 }
