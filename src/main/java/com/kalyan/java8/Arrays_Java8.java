@@ -35,6 +35,9 @@ public class Arrays_Java8 {
 						item -> 1, // Value Mapper
 						(existing, replacement) -> existing + replacement));
 		System.out.println(collect);
+		Map<String, Long> collect2 = Arrays.stream(fruits)
+				.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+		System.out.println(collect2);
 
 		System.out.println("========================================================");
 
@@ -81,7 +84,7 @@ public class Arrays_Java8 {
 		System.out.println("========================================================");
 		System.out.println("9. Find the longest string in an array.");
 		String[] words = { "apple", "banana", "cherry", "watermelon", "grape" };
-		String longestWord = Arrays.stream(words).toList().stream()
+		String longestWord = Arrays.stream(words).collect(Collectors.toList()).stream()
 				.sorted(Comparator.comparingInt(String::length).reversed()).findFirst().get();
 		System.out.println(longestWord);
 
@@ -139,8 +142,6 @@ public class Arrays_Java8 {
 		System.out.println(sortedArrays);
 
 		System.out.println("Rotate an array using Stream API.");
-
-		
 
 	}
 

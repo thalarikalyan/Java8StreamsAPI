@@ -42,6 +42,18 @@ public class Strings_In_Java8 {
 		System.out.println(secondNonRepeatedCharacter);
 		System.out.println("Find out Second Repeated Characters in Given String:: ");
 
+		System.out.println("Find First Repeated Character In a String ::");
+		Character firstRepeatedCharacter = name.chars().mapToObj(c -> (char) c)
+				.collect(Collectors.groupingBy(Function.identity(), LinkedHashMap::new, Collectors.counting()))
+				.entrySet().stream().filter(e -> e.getValue() > 1).map(e -> e.getKey()).findFirst().get();
+		System.out.println(firstRepeatedCharacter);
+
+		System.out.println("Find First Non Repeated Character In a String ::");
+		Character firstNonRepeatedCharacter = name.chars().mapToObj(c -> (char) c)
+				.collect(Collectors.groupingBy(Function.identity(), LinkedHashMap::new, Collectors.counting()))
+				.entrySet().stream().filter(e -> e.getValue() == 1).map(e -> e.getKey()).findFirst().get();
+		System.out.println(firstNonRepeatedCharacter);
+
 		// Steps What I done above
 
 //		1. converted String to chars
@@ -60,7 +72,8 @@ public class Strings_In_Java8 {
 
 		List<String> strings = Arrays.asList("cat", "elephant", "dog", "tiger");
 		System.out.println("Find biggest word ");
-		String maxWord = strings.stream().collect(Collectors.toMap(Function.identity(), s -> s.length())).entrySet().stream().max(Entry.comparingByValue()).map(t ->t.getKey() ).get();
+		String maxWord = strings.stream().collect(Collectors.toMap(Function.identity(), s -> s.length())).entrySet()
+				.stream().max(Entry.comparingByValue()).map(word -> word.getKey()).get();
 		System.out.println(maxWord);
 //		String maxWord1 = strings.stream()
 //                .collect(Collectors.toMap(Function.identity(), String::length)) // Map words to their lengths

@@ -412,5 +412,26 @@ public class BankingBasedApplication {
 						.println("City is " + e.getKey() + "::: " + " Total Balance is:" + e.getValue()));
 		System.out.println("========================================================================");
 
+		System.out.println("Calculate the average balance of CURRENT accounts across all customers.");
+		double averageBalanceForCurrentAccount = bankingDetails.stream()
+				.flatMap(accountName -> accountName.getAccounts().stream())
+				.filter(account -> account.getAccountType().equals("CURRENT"))
+				.mapToDouble(balance -> balance.getBalance()).average().getAsDouble();
+		System.out.println(averageBalanceForCurrentAccount);
+		System.out.println("========================================================================");
+		System.out.println("Find the total loan balance for all customers living in \"Chennai.\"");
+		double sum = bankingDetails.stream().filter(city -> city.getCity().equals("Chennai"))
+				.flatMap(accounts -> accounts.getAccounts().stream())
+				.filter(accountType -> accountType.getAccountType().equals("LOAN"))
+				.mapToDouble(balance -> balance.getBalance()).sum();
+		System.out.println(sum);
+		System.out.println("========================================================================");
+
+		int[] a = { 10, 10, 20, 30, 45, 60, 20 };
+		List<Integer> collect2 = Arrays.stream(a).boxed()
+				.collect(Collectors.groupingBy(Function.identity(), LinkedHashMap::new, Collectors.counting()))
+				.entrySet().stream().filter(e -> e.getValue() == 1).map(e -> e.getKey()).collect(Collectors.toList());
+		System.out.println(collect2);
+
 	}
 }
